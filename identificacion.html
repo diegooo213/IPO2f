@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Identificación - Autotrámite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
+    <style>
+        .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            display: none; /* se activa con JavaScript */
+        }
+
+        .overlay-content {
+            background-color: #d6f7ff;
+            padding: 40px 60px;
+            border-radius: 12px;
+            border: 2px solid #007b8f;
+            color: #003b4f;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1em;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        }
+        .methods-container img {
+            width: 80px; /* o el tamaño que prefieras */
+            height: auto;
+            margin-top: 10px;
+        }
+        .img-dni, .img-facial, .img-huella {
+            width: 80px;
+            height: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <<header>
+        <a href="index.html" class="button button-primary button-ujarakn" style="background-color:transparent; color:#6689ff">← Volver al inicio</a>
+        <div class="logo">
+        <img src="images/Logo_Autotrámite.png" alt="Autotrámite">
+        </div>
+    </header>
+
+    <div class="main-content">
+        <h1>Elija un método de identificación</h1>
+        <div class="methods-container">
+            <div class="method">
+                <a href="#" onclick="mostrarOverlayYRedirigir(event)" class="button button-primary button-ujarak">DNI</a>
+                <img src="images/reconocimientofacial.png" alt="DNI" class="img-dni">
+            </div>
+            <div class="method">
+                <a href="#" onclick="mostrarOverlayYRedirigir(event)" class="button button-primary button-ujarak">Escaneo facial</a>
+                <img src="images/reconocimientofacial.png" alt="Escaneo facial" class="img-facial">
+            </div>
+            <div class="method">
+                <a href="#" onclick="mostrarOverlayYRedirigir(event)" class="button button-primary button-ujarak">Huella dactilar</a>
+                <img src="images/huella.png" alt="Huella dactilar"class="img-huella">
+            </div>
+        </div>
+        <button class="button button-primary button-ujarak" onclick="window.location.href='login.html'" href style="background-color: #b3242a; border-color: #b3242a ">Cancelar</button>
+    </div>
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            <p>Verificando información, por favor espere durante unos segundos…</p>
+        </div>
+    </div>
+    <script>
+        function mostrarOverlayYRedirigir(event) {
+            event.preventDefault();
+            const overlay = document.getElementById("overlay");
+            overlay.style.display = "block"; // Muestra el recuadro azul
+
+            setTimeout(() => {
+                window.location.href = "tramite.html";
+            }, 2500); // Espera 2.5 segundos antes de redirigir
+        }
+    </script>
+
+</body>
+</html>

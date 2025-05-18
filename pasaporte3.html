@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Renovar Pasaporte - Autotrámite</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #ffffff;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        .back-button {
+            font-size: 14px;
+            text-decoration: none;
+            padding: 8px 12px;
+            border: 2px solid #007b8f;
+            border-radius: 5px;
+            color: #007b8f;
+            font-weight: bold;
+        }
+
+        .dni-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .titulo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .subtitulo {
+            font-size: 1em;
+            margin-bottom: 30px;
+        }
+
+        .dni-panel {
+            background-color: #d6f7ff;
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 100%;
+            margin: 30px auto;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+        }
+
+            .dni-panel p {
+                margin: 10px 0;
+                font-size: 1em;
+            }
+
+        .dni-botones {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 45px;
+        }
+
+        .boton-rojo {
+            background-color: #b3242a !important;
+            border-color: #b3242a !important;
+            color: white !important;
+            font-size: 0.9em;
+            padding: 10px 12px;
+            margin-top: 30px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .overlay.hidden {
+                display: none;
+            }
+
+        .overlay-content.firma-overlay {
+            position: relative;
+            background: #d6f7ff;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 500px;
+        }
+
+        .firma-area {
+            position: relative;
+            border: 2px solid #003b4f;
+            width: 400px;
+            height: 180px;
+            margin: 20px auto;
+        }
+
+        #canvasFirma {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+            background-color: aliceblue;
+        }
+
+        .icono-firma {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 30px;
+        }
+
+        .firma-botones {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .cerrar-overlay {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #003b4f;
+            font-weight: bold;
+            z-index: 10000;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="button button-primary button-ujarakn" style="background-color:transparent; color:#6689ff">← Volver al inicio</a>
+        <div class="logo">
+            <img src="images/Logo_Autotrámite.png" alt="Autotrámite" />
+        </div>
+    </header>
+
+    <main class="dni-main">
+        <h1 class="titulo">Renueve su pasaporte</h1>
+        <p class="subtitulo">3. Realice su firma, la cual se verá en su nuevo pasaporte</p>
+        <div class="dni-panel">
+            <p>Tu pasaporte vence el día: <strong>26/08/2023</strong></p>
+            <p>Validez del próximo pasaporte hasta: <strong>26/08/2028</strong></p>
+            <div class="dni-botones">
+                <a onclick="mostrarOverlayFirma()" class="button button-primary button-ujarak">REALIZAR FIRMA</a>
+                <a href="tramite.html" class="button button-primary button-ujarak boton-rojo">Cancelar trámite</a>
+            </div>
+        </div>
+    </main>
+
+    <div id="overlay-firma" class="overlay hidden">
+        <div class="overlay-content firma-overlay">
+            <button class="cerrar-overlay" onclick="cerrarOverlayFirma()">✕</button>
+            <h2>Firme dentro del recuadro</h2>
+            <p class="overlay-subtexto">Use el lápiz óptico para realizar la firma</p>
+            <div class="firma-area">
+                <canvas id="canvasFirma" width="400" height="180"></canvas>
+                <img src="images/firma.png" alt="firma" class="icono-firma" />
+            </div>
+            <div class="firma-botones">
+                <button class="button button-ujarak boton-rojo" onclick="limpiarFirma()">Rehacer firma</button>
+                <button class="button button-primary button-ujarak" onclick="confirmarFirma()">Confirmar firma</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function mostrarOverlayFirma() {
+      document.getElementById('overlay-firma').classList.remove('hidden');
+      inicializarFirma();
+    }
+
+    function confirmarFirma() {
+      window.location.href = 'pasaporte4.html';
+    }
+
+    function limpiarFirma() {
+      const canvas = document.getElementById('canvasFirma');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function inicializarFirma() {
+      const canvas = document.getElementById('canvasFirma');
+      const ctx = canvas.getContext('2d');
+      let pintando = false;
+
+      function comenzarDibujo(e) {
+        pintando = true;
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      }
+
+      function dibujar(e) {
+        if (!pintando) return;
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      }
+
+      function detenerDibujo() {
+        pintando = false;
+      }
+
+      canvas.addEventListener('mousedown', comenzarDibujo);
+      canvas.addEventListener('mousemove', dibujar);
+      canvas.addEventListener('mouseup', detenerDibujo);
+      canvas.addEventListener('mouseleave', detenerDibujo);
+    }
+
+    function cerrarOverlayFirma() {
+      document.getElementById('overlay-firma').classList.add('hidden');
+    }
+    </script>
+</body>
+</html>
